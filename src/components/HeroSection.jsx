@@ -38,7 +38,7 @@ const HeroSection = () => {
           }} 
         className="text-xl md:text-1xl
         lg:text-2xl text-purple-200 max-w-2xl">
-          about me
+          about my projects and other qualification 
         </motion.p>
       </div>
         <Spline className="absolute xl:right-[-28%]
