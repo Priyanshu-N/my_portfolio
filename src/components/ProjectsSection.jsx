@@ -1,131 +1,208 @@
-
-
-import {useRef, useEffect} from 'react'
+import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
-import { SlShareAlt } from "react-icons/sl"
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SlShareAlt } from 'react-icons/sl'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const ProjectsSection = () => {
   const sectionRef = useRef(null)
+  const scrollRef = useRef(null)
+  const panelsRef = useRef([])
   const titleRef = useRef(null)
   const titleLineRef = useRef(null)
-  const projectImages = [
+
+  const projects = [
     {
       id: 1,
-      title: "MERN ESTATE PROJECT",
-      imageSrc: "/images/project-1.png",  //project image 
-
+      title: 'AI SaaS Platform',
+      image: '/images/project-1.png',
     },
     {
       id: 2,
-      title: "MERN ESTATE PROJECT",
-      imageSrc: "/images/project-2.png",  //project image 
-
+      title: 'Chat Application',
+      image: '/images/project-2.png',
     },
     {
       id: 3,
-      title: "MERN ESTATE PROJECT",
-      imageSrc: "/images/project-3.png",  //project image 
-
-    }
-    
+      title: 'Crypto Tracker',
+      image: '/images/project-3.png',
+    },
+    {
+      id: 4,
+      title: 'Portfolio Site',
+      image: '/images/project-4.png',
+    },
   ]
 
-  useEffect(()=> {
-    gsap.registerPlugin(ScrollTrigger)
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const totalPanels = projects.length
 
-    // tital reveal animation
-    gsap.fromTo(
-      titleRef.current,
-      {
-        y:100,
-        opacity:0,
-      },
-      {
-        y:0,
-        opacity:1,
-        duration: 1.2,
-        ease: "power3.out",
+      scrollRef.current.style.width = `${100 * totalPanels}%`
+
+      // ✅ Title Animation
+      gsap.fromTo(
+        titleRef.current,
+        { y: 100, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      )
+
+      // ✅ Line Animation
+      gsap.fromTo(
+        titleLineRef.current,
+        { width: '0%', opacity: 0 },
+        {
+          width: '100%',
+          opacity: 1,
+          duration: 1.5,
+          ease: 'power3.inOut',
+          delay: 0.3,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      )
+
+      // ✅ Horizontal Scroll
+      gsap.to(panelsRef.current, {
+        xPercent: -100 * (totalPanels - 1),
+        ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    )
-    // title line animation 
-    gsap.fromTo(
-      titleLineRef.current,
-      {
-        width: "0%",
-        opacity: 0,
-      },
-      {
-        width: "100%",
-        opacity: 1,
-        duration: 1.5,
-        ease: "power3.inOut",
-        delay: 0.3,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        }
-      }
-    )
-  })
+          start: 'top top',
+          end: () => `+=${scrollRef.current.offsetWidth}`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          snap: 1 / (totalPanels - 1),
+        },
+      })
+
+      // ✅ Per-panel animations
+      panelsRef.current.forEach((panel) => {
+        const img = panel.querySelector('img')
+        const title = panel.querySelector('h3')
+
+        gsap.fromTo(
+          img,
+          { scale: 0.8, opacity: 0 },
+          {
+            scale: 1,
+            opacity: 1,
+            scrollTrigger: {
+              trigger: panel,
+              start: 'left center',
+              end: 'right center',
+              scrub: true,
+            },
+          }
+        )
+
+        gsap.fromTo(
+          title,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            scrollTrigger: {
+              trigger: panel,
+              start: 'left center',
+              end: 'right center',
+              scrub: true,
+            },
+          }
+        )
+      })
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [projects.length])
+
   return (
     <section
       ref={sectionRef}
-      id="horizantal-section"
-      className='relative py-20 bg-[#f6f6f6] overflow-hidden'
+      className='w-full bg-[#f6f6f6] text-black py-20 overflow-hidden'
     >
-      {/* section title  */}
-      <div className='container mx-auto px-4 mb-16
-      relative z-10'>
-        <h2 ref={titleRef} className='text-4xl md:text-5xl lg:text-6xl
-        font-bold text-black text-center mb-4 opacity-0'>
-          Featured Projects  
+      {/* Section Header */}
+      <div className='text-center mb-6 container mx-auto px-2 relative z-10'>
+        <h2
+          ref={titleRef}
+          className='text-4xl md:text-5xl font-bold mb-4 opacity-0'
+        >
+          My Projects
         </h2>
-        <div ref={titleLineRef} className='w-0 h-1
-        bg-gradient-to-r from-purple-500 to-pink-500
-        mx-auto opacity-0'></div>
+        <div
+          ref={titleLineRef}
+          className='w-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto opacity-0'
+        ></div>
+        <p className='text-gray-500 text-lg mt-3'>Scroll to explore</p>
       </div>
 
-      {/* horizantal scroll section  */}
-      <div className='overflow-hidden'>
-        <div className='horizontal-section flex 
-        md:w-[400%] w-[400%] justify-center items-center gap-10'>
+      {/* Scrollable Panels */}
+      <div
+        ref={scrollRef}
+        className='flex h-[80vh] transition-all duration-300'
+      >
+        {projects.map((project, index) => (
+          <div
+            key={project.id}
+            ref={(el) => (panelsRef.current[index] = el)}
+            className='w-screen flex-shrink-0 flex flex-col items-center justify-center p-8'
+          >
+            <img
+              src={project.image}
+              alt={project.title}
+              className='w-full max-w-[600px] h-auto rounded-2xl object-cover shadow-xl mb-6 project-image'
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/600x400?text=Missing+Image'
+              }}
+            />
 
-
-        {projectImages.map((project)=>(
-          <div key={project.id} className='panel relative flex items-center justify-center'>
-            <div className='relative w-full h-full flex flex-col items-center justify-center
-            p-4 sm:p-8 md:p-12'>
-              <img
-                className='project-image max-w-full max-h-full rounded-2xl
-                object-cover' 
-                
-                src={project.imageSrc} 
-                alt="Project-img" 
+            <h3
+              className='project-title text-2xl md:text-3xl font-semibold flex items-center gap-2 cursor-pointer text-nowrap'
+              onClick={(e) => {
+                const target = e.currentTarget
+                gsap.fromTo(
+                  target,
+                  { scale: 1, color: '#000000' },
+                  {
+                    scale: 1.1,
+                    color: '#ec4899',
+                    duration: 0.2,
+                    repeat: 1,
+                    yoyo: true,
+                    ease: 'power1.inOut',
+                  }
+                )
+              }}
+            >
+              {project.title}
+              <SlShareAlt
+                className='text-pink-500 cursor-pointer hover:text-pink-400 transition-colors duration-200'
+                onClick={(e) => {
+                  e.stopPropagation()
+                  const shareUrl = `${window.location.origin}/projects#project-${project.id}`
+                  navigator.clipboard.writeText(shareUrl)
+                  alert('Project link copied to clipboard!')
+                }}
               />
-
-              <h2 className='project-title flex items-center gap-3
-              md:text-3xl text-sm md:font-bold text-black mt-6
-              z-50 text-nowrap hover:text-gray-400
-              transition-colors duration-300
-              cursor-pointer' >
-                {project.title} <SlShareAlt/>
-              </h2>
-            </div>
-
+            </h3>
           </div>
-            
         ))}
-
-        </div>
       </div>
-
     </section>
   )
 }
