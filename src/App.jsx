@@ -8,6 +8,9 @@ import HeroSection from "./components/HeroSection"
 import CustomCursor from "./components/CustomCursor"
 import AboutSection from "./components/AboutSection"
 import ProjectsSection from "./components/ProjectsSection"
+import ContactSection from "./components/ContactSection"
+
+
 export default function App() {
   
   useEffect(() => {
@@ -30,6 +33,7 @@ export default function App() {
       <CustomCursor/>
       <AboutSection/>
       <ProjectsSection/>
+      <ContactSection />
     
     </>
   )
