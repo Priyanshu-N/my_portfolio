@@ -9,6 +9,7 @@ import CustomCursor from "./components/CustomCursor"
 import AboutSection from "./components/AboutSection"
 import ProjectsSection from "./components/ProjectsSection"
 import ContactSection from "./components/ContactSection"
+import Footer from "./components/Footer"
 
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
       <AboutSection/>
       <ProjectsSection/>
       <ContactSection />
+      <Footer  />
     
     </>
   )
