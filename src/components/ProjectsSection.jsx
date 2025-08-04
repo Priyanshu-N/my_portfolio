@@ -133,6 +133,7 @@ const ProjectsSection = () => {
 
   return (
     <section
+      id='projects'
       ref={sectionRef}
       className='w-full bg-[#f6f6f6] text-black py-20 overflow-hidden'
     >
